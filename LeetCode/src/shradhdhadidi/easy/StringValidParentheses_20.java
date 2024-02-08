@@ -3,14 +3,14 @@ package shradhdhadidi.easy;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class StringValidParentheses {
+public class StringValidParentheses_20 {
 	private HashMap<Character, Character> mappings;
 
 	public static void main(String[] args) {
 
 	}
 
-	public StringValidParentheses() {
+	public StringValidParentheses_20() {
 		this.mappings = new HashMap<Character, Character>();
 		this.mappings.put(')', '(');
 		this.mappings.put('}', '{');
