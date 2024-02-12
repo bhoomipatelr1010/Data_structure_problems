@@ -11,7 +11,7 @@ public class CountNextGreaterElement {
 
 		int[] query = new int[] { 49, 7, 10, 2, 27, 27, 21, 6, 12, 46, 44, 49, 2, 42, 43, 25, 7, 17, 4, 27, 35, 37, 17,
 				8, 4, 29, 37, 30, 32, 16, 22, 34, 16, 8, 23, 6, 48, 20, 23, 37, 45 };
-		countGreater(nums, query);
+		countGreaterUsingMergeSort(nums, query);
 	}
 
 	public static int[] countGreater(int[] nums, int[] query) {
@@ -31,4 +31,88 @@ public class CountNextGreaterElement {
 		return res;
 	}
 
+	// Using count inversion way to solve this problem
+	public static int[] countGreaterUsingMergeSort(int[] nums, int[] query) {
+
+		Pair<Integer, Integer>[] pairs = new Pair[nums.length];
+
+		for (int i = 0; i < nums.length; i++) {
+			pairs[i] = new Pair<Integer, Integer>(nums[i], i);
+		}
+
+		int[] ans = new int[nums.length];
+		mergeSort(pairs, ans, nums.length - 1, 0);
+
+		int[] res = new int[query.length];
+
+		for (int i = 0; i < res.length; i++) {
+			res[i] = ans[query[i]];
+		}
+		return res;
+	}
+
+	private static void mergeSort(Pair<Integer, Integer>[] pairs, int[] ans, int high, int low) {
+
+		int mid;
+
+		if (low < high) {
+
+			mid = (high + low) / 2;
+			mergeSort(pairs, ans, mid, low);
+			mergeSort(pairs, ans, high, mid + 1);
+			merge(pairs, ans, high, low, mid);
+		}
+	}
+
+	private static void merge(Pair<Integer, Integer>[] pairs, int[] ans, int high, int low, int mid) {
+
+		Pair<Integer, Integer>[] temp = new Pair[high - low + 1];
+		int left = low;
+		int right = mid + 1;
+		int i = 0;
+		while (left <= mid && right <= high) {
+			if (pairs[left].first < pairs[right].first) {
+				temp[i] = pairs[left];
+				ans[pairs[left].second] += high - right + 1;
+				left++;
+			} else {
+				temp[i] = pairs[right];
+				right++;
+			}
+			i++;
+		}
+
+		while (left <= mid) {
+			temp[i] = pairs[left];
+			left++;
+			i++;
+
+		}
+
+		while (right <= high) {
+			temp[i] = pairs[right];
+			right++;
+			i++;
+
+		}
+
+		for (int k = low; k <= high; k++) {
+			pairs[k] = temp[k - low];
+		}
+	}
+
+	static class Pair<K, V> {
+		K first;
+		V second;
+
+		Pair(K first, V second) {
+			this.first = first;
+			this.second = second;
+		}
+
+		@Override
+		public String toString() {
+			return first + " " + second;
+		}
+	}
 }
